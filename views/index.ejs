@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel='stylesheet' href='/css/style.css' />
+  </head>
+  <body>
+    <p><%=ip%></p>
+    <!-- 캐릭터 선택 -->
+    <form action="/" method="post">
+      <label for="name">name</label>
+      <input type="text" name="name" id="name" placeholder="name" /><br/>
+
+      <label>==select character==</label><br/>
+      <label for="character1">[warrier]</label>
+      <input type="radio" name="character" id="character1" value="warrier" /><br/>
+      <label for="character2">[magician]</label>
+      <input type="radio" name="character" id="character2" value="magician" /><br/>
+
+      <input type="submit" value="Start" />
+    </form>
+  </body>
+</html>

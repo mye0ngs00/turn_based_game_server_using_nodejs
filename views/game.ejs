@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel='stylesheet' href='/css/style.css' />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/script.js"></script>
+  </head>
+  <body>
+    <label>name: </label><span><%= name %></span><br/>
+    <label>character: </label><span><%= character %></span><br/>
+    <label> 내 HP: </label><span id="HP">5</span>
+    <label> 상대HP: </label><span id="enemyHP">5</span><br/>
+    <label> 내 MP: </label><span id="MP">5</span>
+    <label> 상대MP: </label><span id="enemyMP">5</span><br/>
+    <label id="myTurn"> 첫번째 턴 </label>
+    <!-- for variable -->
+    <!-- instead of management with session -->
+    <button hidden="hidden" id="ip" value="<%= ip %>"></button>
+    <button hidden="hidden" id="name" value="<%= name %>"></button>
+    <button hidden="hidden" id="character" value="<%= character %>"></button>
+    <button hidden="hidden" id="turn" value="<%= turn %>"></button>
+
+    <div class="field" style="background-image: url('img/field.png');
+		background-size: 400px 300px;
+		width: 400px;
+		height: 300px;">
+      <table border="1" width="400px" height="300px" style="border-collapse: collapse">
+	<tr>
+	  <td id="00" width="25%">&nbsp;</td>
+	  <td id="01" width="25%">&nbsp;</td>
+	  <td id="02" width="25%">&nbsp;</td>
+	  <td id="03" width="25%">&nbsp;</td>
+	</tr>
+	<tr>
+	  <td id="10" width="25%">&nbsp;</td>
+	  <td id="11" width="25%">&nbsp;</td>
+	  <td id="12" width="25%">&nbsp;</td>
+	  <td id="13" width="25%">&nbsp;</td>
+	</tr>
+	<tr>
+	  <td id="20" width="25%">&nbsp;</td>
+	  <td id="21" width="25%">&nbsp;</td>
+	  <td id="22" width="25%">&nbsp;</td>
+	  <td id="23" width="25%">&nbsp;</td>
+	</tr>
+      </table>
+    </div>
+
+    <div id="notice">&nbsp;</div>
+    <div id="currentCard">&nbsp;</div>
+    <br/><br/>
+    1:<span id="pick1"> </span><br/>
+    2:<span id="pick2"> </span><br/>
+    3:<span id="pick3"> </span><br/>
+    <button id="fix">FIX</button><br/>
+    ▼ My Deck ▼
+    <div id="Deck">
+      <span id="card1">위로한칸</span>
+      <span id="card2">위로한칸</span>
+      <span id="card3">왼쪽한칸</span>
+      <span id="card4">왼쪽한칸</span>
+      <span id="card5">오른쪽한칸</span>
+      <span id="card6">오른쪽한칸</span>
+      <span id="card7">아래한칸</span>
+      <span id="card8">아래한칸</span>
+      <span id="card9">마나충전</span>
+      <% if( character == "warrier" ){ %>
+      	<span id="card10">기본공격</span>
+      	<span id="card11">수호자의 방패</span>
+      	<span id="card12">방패돌진</span>
+      	<span id="card13">휘두르기</span>
+      	<span id="card14">방패 던지기</span>
+      	<span id="card15">심판</span>
+      <% } else if( character == "magician" ){ %>
+      	<span id="card16">마법사의 계약</span>
+	      <span id="card17">(좌)순간이동</span>
+      	<span id="card18">(우)순간이동</span>
+      	<span id="card19">파이어월</span>
+      	<span id="card20">파이어볼</span>
+      	<span id="card21">(홀)메테오</span>
+      	<span id="card22">(짝)메테오</span>
+      <% } %>
+    </div>
+  </body>
+</html>
