@@ -10,9 +10,10 @@ router.get('/', (req, res, next)=>{
   	req.connection.remoteAddress ||
   	req.socket.remoteAddress ||
   	(req.connection.socket ? req.connection.socket.remoteAddress : null);
-
-  //rendering
-  res.render('index', { ip });
+  
+  // dont have session.
+  if( !req.session.username ) res.redirect('/login');
+  else res.render('index', { ip });
 });
 
 // send data

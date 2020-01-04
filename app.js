@@ -4,11 +4,11 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const mysql = require('mysql'); //아직 사용안함.
+const mysql = require('mysql');
 const crypto = require('crypto'); //아직 사용안함.
 const MySQLStore = require('express-mysql-session')(session);
 const dbOptions = require('./configs/dbConfig');
-const dbSecretKey = require('./configs/dbSecretKey');
+const dbSecret = require('./configs/dbSecretKey');
 const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
@@ -16,7 +16,10 @@ const usersRouter = require('./routes/users');
 
 const app = express();
 
-// webSocket.
+// rdb connection.
+app.conn = mysql.createConnection(dbOptions);
+
+// webSocket connection.
 app.io = require('socket.io')();
 require('./routes/war_using_socket')(app);
 
@@ -31,7 +34,7 @@ app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(session({
-  secret: dbSecretKey,
+  secret: dbSecret,
   store: new MySQLStore(dbOptions),
   resave: false,
   saveUninitialized: false,
