@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const mysql = require('mysql');
-const crypto = require('crypto'); //아직 사용안함.
 const MySQLStore = require('express-mysql-session')(session);
 const dbOptions = require('./configs/dbConfig');
 const dbSecret = require('./configs/dbSecretKey');

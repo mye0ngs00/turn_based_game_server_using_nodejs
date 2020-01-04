@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const crypto = require('crypto'); // for sign.
 
 /* login form */
 router.get('/in', (req, res)=>{
@@ -22,19 +23,24 @@ router.post('/in', (req, res)=>{
     // finding id.
     req.app.conn.query(query, [id], (err, result)=>{
         if( err ) console.log(err);
-        console.dir(result);
-        console.log(result);
+
         // id failure.
         if( !result[0] ) res.render('sign_in', { msg: 'plz chk ur pw.'});
-        else if( pw === result[0].password ){
-            req.session.username = "test";
-            req.session.save((err)=>{
-                if(err) console.error(err);
-                res.redirect('/');
+        else{
+            crypto.pbkdf2(pw, "user.salt", 100000, 64, 'sha512', (err2, keyStream)=>{
+                // success.
+                if( keyStream.toString('hex') === result[0].password ){
+                    console.log("[SIGN IN] %s", result[0].id );
+                    req.session.username = result[0].id;
+                    req.session.save((err)=>{
+                        if(err) console.error(err);
+                        res.redirect('/');
+                    });
+                }
+                // pw failure.
+                else res.render('sign_in', { msg: 'plz chk ur pw.'});
             });
-        }
-        // pw failure.
-        else res.render('sign_in', { msg: 'plz chk ur pw.'});
+        } 
     });
 });
 
@@ -63,9 +69,12 @@ router.post('/up', (req, res)=>{
         if(!result[0]){
             query = 'INSERT INTO users (id, password) VALUES (?, ?)';
             // success.
-            req.app.conn.query(query, [id, pw], (err_, result)=>{
-                if(err_) console.error(err_); //throw err;
-                else res.redirect('/sign/in');
+            crypto.pbkdf2(pw, "user.salt", 100000, 64, 'sha512', (err2, keyStream)=>{
+                if( err2 ) console.error(err2);
+                req.app.conn.query(query, [id, keyStream.toString('hex')], (err3, result)=>{
+                    if(err3) console.error(err3); //throw err;
+                    else res.redirect('/sign/in');
+                });
             });
         }
         // failure.
