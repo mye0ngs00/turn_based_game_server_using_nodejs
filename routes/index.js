@@ -5,15 +5,9 @@ var players = [];
 
 /* GET home page. */
 router.get('/', (req, res, next)=>{
-  // log 추가
-  let ip = req.headers['x-forwarded-for'] ||
-  	req.connection.remoteAddress ||
-  	req.socket.remoteAddress ||
-  	(req.connection.socket ? req.connection.socket.remoteAddress : null);
-  
-  // dont have session.
-  if( !req.session.username ) res.redirect('/login');
-  else res.render('index', { ip });
+  // u have an session?
+  if( !req.session.username ) res.redirect('/sign/in');
+  else res.render('index');
 });
 
 // send data

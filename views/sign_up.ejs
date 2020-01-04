@@ -6,14 +6,14 @@
     <link rel='stylesheet' href='/css/style.css' />
 
     <script>
-    <% if( locals.msg ){ %>
-        alert("<%= msg %>" );
-    <% } %>
+        <% if (locals.msg) { %>
+            alert("<%= msg %>");
+        <% } %>
     </script>
 </head>
 
 <body>
-    <form action="/login" method="post">
+    <form action="/sign/up" method="post">
         <table>
             <tr>
                 <td>
@@ -33,16 +33,16 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <input type="submit" value="로그인" />
+                    <input type="submit" value="가입신청" />
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
-                    <!-- 미완 -->
-                    <input type="button" value="회원가입" />
+                    <input type="button" onclick="location.href='/sign/in';" value="뒤로가기" />
                 </td>
             </tr>
         </table>
     </form>
 </body>
+
 </html>
