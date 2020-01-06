@@ -27,11 +27,12 @@ router.post('/in', (req, res)=>{
         // id failure.
         if( !result[0] ) res.render('sign_in', { msg: 'plz chk ur pw.'});
         else{
-            crypto.pbkdf2(pw, "user.salt", 100000, 64, 'sha512', (err2, keyStream)=>{
+            let user = result[0];
+            crypto.pbkdf2(pw, user.salt, 100000, 64, 'sha512', (err2, keyStream)=>{
                 // success.
-                if( keyStream.toString('hex') === result[0].password ){
-                    console.log("[SIGN IN] %s", result[0].id );
-                    req.session.username = result[0].id;
+                if( keyStream.toString('hex') === user.password ){
+                    console.log("[SIGN IN] %s", user.id );
+                    req.session.username = user.id;
                     req.session.save((err)=>{
                         if(err) console.error(err);
                         res.redirect('/');
@@ -67,11 +68,12 @@ router.post('/up', (req, res)=>{
         if(err) console.error(err);
         // validate.
         if(!result[0]){
-            query = 'INSERT INTO users (id, password) VALUES (?, ?)';
+            let salt = crypto.randomBytes(16).toString('hex');
+            query = 'INSERT INTO users (id, password, salt) VALUES (?, ?, ?)';
             // success.
-            crypto.pbkdf2(pw, "user.salt", 100000, 64, 'sha512', (err2, keyStream)=>{
+            crypto.pbkdf2(pw, salt, 100000, 64, 'sha512', (err2, keyStream)=>{
                 if( err2 ) console.error(err2);
-                req.app.conn.query(query, [id, keyStream.toString('hex')], (err3, result)=>{
+                req.app.conn.query(query, [id, keyStream.toString('hex'), salt], (err3, result)=>{
                     if(err3) console.error(err3); //throw err;
                     else res.redirect('/sign/in');
                 });
