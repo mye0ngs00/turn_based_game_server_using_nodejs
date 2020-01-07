@@ -46,7 +46,6 @@ app.use('/', indexRouter);
 app.use('/lobby', lobbyRouter);
 app.use('/room', roomRouter);
 app.use('/sign', signRouter);
-app.use(require('./routes/session-finder')());
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
