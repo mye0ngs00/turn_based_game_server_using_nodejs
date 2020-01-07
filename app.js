@@ -41,11 +41,12 @@ app.use(session({
   saveUninitialized: false,
 }));
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(require('./routes/ip-logger')());
 app.use('/', indexRouter);
 app.use('/lobby', lobbyRouter);
 app.use('/room', roomRouter);
 app.use('/sign', signRouter);
+app.use(require('./routes/session-finder')());
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

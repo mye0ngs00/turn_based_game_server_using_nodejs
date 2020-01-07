@@ -37,7 +37,7 @@ exports = module.exports = (app) => {
             socket.emit('setup', data);
             socket.broadcast.emit('setup', data);
         });
-        socket.on('end', (data)=>{
+        socket.on('end', ()=>{
             isPlaying = false;
             player0_ready = false;
             player1_ready = false;

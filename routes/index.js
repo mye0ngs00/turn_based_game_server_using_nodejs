@@ -4,7 +4,7 @@ let numOfPlayers = 0;
 let players = [];
 
 /* GET home page. */
-router.get('/', (req, res, next)=>{
+router.get('/', (req, res)=>{
   // u have an session?
   if( !req.session.username ) res.redirect('/sign/in');
   else res.render('index');
@@ -12,12 +12,6 @@ router.get('/', (req, res, next)=>{
 
 // send data
 router.post('/', (req, res)=>{
-  let ip = req.headers['x-forwarded-for'] ||
-  	req.connection.remoteAddress ||
-  	req.socket.remoteAddress ||
-  	(req.connection.socket ? req.connection.socket.remoteAddress : null);
-  
-  console.log("%s entrance trying...", ip);
   // play game when number of the players less than 2
   // req.app.get = app.get of parent router. (app.js)
   numOfPlayers = req.app.get('numOfPlayers');
@@ -28,11 +22,11 @@ router.post('/', (req, res)=>{
 
   if( numOfPlayers < 2 ){
   	res.render('game', {
-		ip,
-		name: req.body.name,
-		character: req.body.character,
-		turn: emptyIdx,
-	});
+      ip: res.locals.ip,
+      name: req.body.name,
+      character: req.body.character,
+      turn: emptyIdx,
+	  });
   }
   else res.send("방이 꽉찼습니다.");
 });
