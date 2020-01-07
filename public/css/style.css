@@ -7,4 +7,14 @@ a {
   color: #00B7FF;
 }
 
-.card{}
+ul{
+  list-style-type: none;
+}
+li{
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  width: 100px;
+  height: 100px;
+  float: left;
+}
