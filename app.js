@@ -10,6 +10,8 @@ const dbOptions = require('./configs/dbConfig');
 const dbSecret = require('./configs/dbSecretKey');
 const logger = require('morgan');
 const indexRouter = require('./routes/index');
+const lobbyRouter = require('./routes/lobby');
+const roomRouter = require('./routes/room');
 const signRouter = require('./routes/sign');
 const usersRouter = require('./routes/users');
 
@@ -41,6 +43,8 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/lobby', lobbyRouter);
+app.use('/room', roomRouter);
 app.use('/sign', signRouter);
 app.use('/users', usersRouter);
 
