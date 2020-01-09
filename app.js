@@ -1,19 +1,25 @@
 const createError = require('http-errors');
+const logger = require('morgan');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+
 const session = require('express-session');
 const mysql = require('mysql');
 const MySQLStore = require('express-mysql-session')(session);
+
 const dbOptions = require('./configs/dbConfig');
 const dbSecret = require('./configs/dbSecretKey');
-const logger = require('morgan');
+
 const indexRouter = require('./routes/index');
 const lobbyRouter = require('./routes/lobby');
 const roomRouter = require('./routes/room');
 const signRouter = require('./routes/sign');
 const usersRouter = require('./routes/users');
+
+const gameQueue = new (require('./data_structures/queue'));
+const gameAdapter = require('./routes/game-adapter')(gameQueue);
 
 const app = express();
 
@@ -43,6 +49,8 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('./routes/ip-logger')());
 app.use('/', indexRouter);
+
+//큐 연결 구현해야함.
 app.use('/lobby', lobbyRouter);
 app.use('/room', roomRouter);
 app.use('/sign', signRouter);
@@ -63,5 +71,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// queue per 1 sec.
+let queueInterval = setInterval(gameAdapter, 1000);
 
 module.exports = app;
