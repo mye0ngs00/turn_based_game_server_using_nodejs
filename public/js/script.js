@@ -46,7 +46,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 		isPlaying = false;
 		// 게임 종료
 		if( !enemyHP || !HP ){
-			if( enemyHP == 0 ) alert(" You win.");
+			if( enemyHP < 1 ) alert(" You win.");
 			else alert("You lose.");
 		}
 	});
