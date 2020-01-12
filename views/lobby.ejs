@@ -1,1 +1,28 @@
-hi22.
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel='stylesheet' href='/css/style.css' />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/lobby.js"></script>
+    <style>
+        .user{ border: 1px solid green }
+    </style>
+    <!-- user information -->
+    <button hidden="hidden" id="ip" value="<%= ip %>"></button>
+    <button hidden="hidden" id="name" value="<%= name %>"></button>
+    <button hidden="hidden" id="character" value="<%= character %>"></button>
+    <button hidden="hidden" id="turn" value="<%= turn %>"></button>
+  </head>
+  <body>
+    <div>
+        <button id="finder" class="enqueue">게임찾기</button>
+    </div>
+    <input type="button" onclick="location.href='/sign/out';" value="로그아웃" />
+    <div id="users">
+        <span class="user">
+            GM태호
+        </span>
+    </div>
+  </body>
+</html>

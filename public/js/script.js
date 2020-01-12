@@ -1,7 +1,7 @@
-var ip;
-var name;
-var character;
-var turn;
+var $ip;
+var $name;
+var $character;
+var $turn;
 var action;
 
 var row;
@@ -29,17 +29,18 @@ var isPlaying = false;
 const MAX_ROW = 2;
 const MAX_COL = 3;
 
+// 요소를 가져온 것들은 전부 $로 parameter 선언.
 window.addEventListener('DOMContentLoaded', (event)=>{
-	ip = document.getElementById('ip').value;
-	name = document.getElementById('name').value;
-	character = document.getElementById('character').value;
-	turn = document.getElementById('turn').value;
-	document.getElementById("myTurn").innerHTML = turn==0?"선공":"후공";
+	$ip = document.getElementById('ip').value;
+	$username = document.getElementById('name').value;
+	$character = document.getElementById('character').value;
+	$turn = document.getElementById('turn').value;
+	document.getElementById("myTurn").innerHTML = $turn==0?"선공":"후공";
 
 	action = io();
 	action.on('end', function(){
-		action.emit('turn'+turn, false);
-		document.getElementById("myTurn").innerHTML = turn===0?"선공":"후공";
+		action.emit('turn'+$turn, false);
+		document.getElementById("myTurn").innerHTML = $turn===0?"선공":"후공";
 
 		turnedIter = 1;
 		myTurnFixed = false;
@@ -53,8 +54,8 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 	action.on('connect', function(socket){
 		console.log('connect');
 		action.emit('join',{
-			name,
-			ip,
+			name: $username,
+			ip: $ip,
 		});
 	});
 	action.on('re', ()=>{
@@ -70,8 +71,8 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 			turnUp();
 			setTimeout(()=>{action.emit('turnUpToServer');}, 1500);
 			if( turnedIter == 3){
-				if( turn == 1 ) turn = 0;
-				else turn = 1;
+				if( $turn == 1 ) $turn = 0;
+				else $turn = 1;
 			}
 		}
 	  
@@ -215,14 +216,14 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 	reset();
 	
 	function reset(){
-		if( turn == 0 ){
+		if( $turn == 0 ){
 			row = 0;
 			col = 0;
 			HP = 5;
 			MP = 5;
 			damage = 0;
 		}
-		else if( turn == 1 ){
+		else if( $turn == 1 ){
 			row = MAX_ROW;
 			col = MAX_COL;
 			HP = 5;
@@ -621,7 +622,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 				if( MP - mp < 0 ){ check = true; }
 			}
 			if( !check ){
-				action.emit('turn'+turn, true);
+				action.emit('turn' + $turn, true);
 				myTurnFixed = true;
 				alert(" ready. ");
 			}else{

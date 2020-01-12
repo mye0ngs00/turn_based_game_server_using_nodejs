@@ -10,7 +10,7 @@ router.get('/', (req, res)=>{
   else res.render('index');
 });
 
-// send data
+/* sub id */
 router.post('/', (req, res)=>{
   // play game when number of the players less than 2
   // req.app.get = app.get of parent router. (app.js)
@@ -21,12 +21,12 @@ router.post('/', (req, res)=>{
   else emptyIdx = 1;
 
   if( numOfPlayers < 2 ){
-  	res.render('game', {
+    res.render('lobby',{
       ip: res.locals.ip,
       name: req.body.name,
       character: req.body.character,
       turn: emptyIdx,
-	  });
+    });
   }
   else res.send("방이 꽉찼습니다.");
 });
