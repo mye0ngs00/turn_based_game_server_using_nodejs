@@ -26,6 +26,7 @@ app.conn = mysql.createConnection(dbOptions);
 // webSocket connection.
 app.io = require('socket.io')();
 require('./routes/war_using_socket')(app);
+require('./routes/queue_manager')(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -14,15 +14,26 @@ window.addEventListener('DOMContentLoaded', ()=>{
             T.classList.add('exit');
             T.innerHTML = "취소";
             console.log('enqueue'); //debug.
-            
+            document.getElementById('users').style.visibility = "visible";
+
             socket = io();
             // append user.
             socket.emit('enqueue', $username ); //나중에는 여기에 MMR 추가해서 emit.
             // params,, socket.username 으로 변경예정.
-            addUser( "test" );
+            addUser( $username );
             // 소켓으로 다른사람 이름 받으면 참가자 목록에 추가하기.
-            socket.on('addUser', ( othername )=>{
-                addUser( othername );
+            socket.on('addUser', ( othernames )=>{
+                if( !othernames ) return;
+                othernames.forEach( name => {
+                    addUser( name );
+                });
+            });
+
+            socket.on('removeUser', ( othernames )=>{
+                if( !othernames ) return;
+                othernames.forEach( name => {
+                    removeUser( name );
+                });
             });
         }
         else if( T.classList.value === "exit" ){
@@ -30,10 +41,13 @@ window.addEventListener('DOMContentLoaded', ()=>{
             T.classList.add('enqueue');
             T.innerHTML = "게임찾기";
             console.log('exit'); //debug.
-
+            document.getElementById('users').innerHTML = '';
+            document.getElementById('users').style.visibility = "hidden";
             /*
                 목록에서 본인 삭제 구현.
             */
+            socket.emit('exit', $username );
+            //removeUser( $username );
             socket.close();
         }
         return;
@@ -44,5 +58,14 @@ window.addEventListener('DOMContentLoaded', ()=>{
         paragraph.innerHTML = username;
         paragraph.classList.add('user');
         document.getElementById('users').appendChild(paragraph);
+    }
+
+    removeUser = ( username )=>{
+        let $users = document.getElementsByClassName('user');
+        for( let doc of $users){
+            if( doc.innerHTML === username ){
+                doc.parentNode.removeChild(doc);
+            }
+        };
     }
 });

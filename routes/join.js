@@ -1,5 +1,5 @@
 /**
- * 참조하는 모듈: routes/game-adapter.js
+ * 참조하는 모듈: queue_manager.js
  */
 
 exports = module.exports = ( user1, user2 )=>{

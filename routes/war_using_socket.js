@@ -1,4 +1,5 @@
 exports = module.exports = (app) => {
+    
     let numOfPlayers = 0;
     let datasBeforeJoin = [];
     let players = []; //배열 초기화
