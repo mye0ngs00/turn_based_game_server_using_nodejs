@@ -1,5 +1,4 @@
 const gameQueue = new (require('../data_structures/queue'));
-const join = require('./join');
 
 exports = module.exports = (app) => {
     app.io.on('connection', (socket)=>{
@@ -24,9 +23,6 @@ exports = module.exports = (app) => {
             socket.broadcast.emit('removeUser', [ socket.username ] );
             socket.disconnect();
         });
-        /*
-        if( gameQueue.length() > 2 ){
-            join( gameQueue.dequeue(), gameQueue.dequeue() );
-        }*/
+
     });
 };

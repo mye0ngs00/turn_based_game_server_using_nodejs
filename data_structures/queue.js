@@ -1,8 +1,16 @@
+const join = require('../routes/join');
+
 exports = module.exports = class Queue{
     constructor(){
         this._queue = [];
         this.enqueue = ( item )=>{
             this._queue.unshift( item );
+
+            // matching
+            if( this._queue.length > 1 ){
+                console.log('test');
+                join( this._queue.pop(), this._queue.pop() );
+            }
         }
 
         this.dequeue = ()=>{
