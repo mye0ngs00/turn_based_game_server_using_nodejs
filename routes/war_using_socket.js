@@ -35,21 +35,18 @@ exports = module.exports = (app) => {
         });
         socket.on('setup', (data)=>{
             datasBeforeJoin.push(data);
-            socket.emit('setup', data);
-            socket.broadcast.emit('setup', data);
+            app.io.sockets.emit('setup', data);
         });
         socket.on('end', ()=>{
             isPlaying = false;
             player0_ready = false;
             player1_ready = false;
-            socket.emit('end');
-            socket.broadcast.emit('end');
+            app.io.sockets.emit('end');
         });
         // action
         socket.on('action', (data)=>{
             // traffic 많으면 local처리.
-            socket.emit('situation', data);
-            socket.broadcast.emit('situation', data);
+            app.io.sockets.emit('situation', data);
         });
         // isReady to game?
         socket.on('turn0', (bool)=>{
@@ -58,8 +55,7 @@ exports = module.exports = (app) => {
             if( player0_ready && player1_ready && !isPlaying ){
                 console.log('turn0  ready');
                 isPlaying = true;
-                socket.emit('ready');
-                socket.broadcast.emit('ready');
+                app.io.sockets.emit('ready');
                 socket.emit('turnUp');
             }
         });
@@ -68,11 +64,10 @@ exports = module.exports = (app) => {
             player1_ready = bool;
             if( player0_ready && player1_ready && !isPlaying ){
                 console.log('turn1  ready');
-            isPlaying = true;
-            socket.emit('ready');
-            socket.broadcast.emit('ready');
-            socket.broadcast.emit('turnUp');
-          }
+                isPlaying = true;
+                app.io.sockets.emit('ready');
+                socket.broadcast.emit('turnUp');
+            }
         });
         socket.on('turnUpToServer', ()=>{
             socket.broadcast.emit('turnUp');
