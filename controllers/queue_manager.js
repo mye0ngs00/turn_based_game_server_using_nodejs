@@ -1,4 +1,4 @@
-const gameQueue = new (require('../data_structures/queue'));
+const gameQueue = new (require('../models/queue'));
 
 exports = module.exports = (app) => {
     app.io.on('connection', (socket)=>{

@@ -16,7 +16,6 @@ const indexRouter = require('./routes/index');
 const lobbyRouter = require('./routes/lobby');
 const roomRouter = require('./routes/room');
 const signRouter = require('./routes/sign');
-const usersRouter = require('./routes/users');
 
 const app = express();
 
@@ -25,8 +24,8 @@ app.conn = mysql.createConnection(dbOptions);
 
 // webSocket connection.
 app.io = require('socket.io')();
-require('./routes/war_using_socket')(app);
-require('./routes/queue_manager')(app);
+require('./controllers/war_using_socket')(app);
+require('./controllers/queue_manager')(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -52,7 +51,6 @@ app.use('/', indexRouter);
 app.use('/lobby', lobbyRouter);
 app.use('/room', roomRouter);
 app.use('/sign', signRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
