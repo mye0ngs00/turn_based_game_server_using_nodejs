@@ -44,7 +44,7 @@ app.use(session({
   saveUninitialized: false,
 }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('./routes/ip-logger')());
+app.use(require('./controllers/ip-logger')());
 app.use('/', indexRouter);
 
 //큐 연결 구현해야함.

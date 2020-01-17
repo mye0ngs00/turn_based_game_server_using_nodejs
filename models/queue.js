@@ -1,4 +1,4 @@
-const join = require('../routes/join');
+const join = require('../controllers/join');
 
 exports = module.exports = class Queue{
     constructor(){
@@ -29,6 +29,7 @@ exports = module.exports = class Queue{
         this.length = ()=>{
             return this._queue.length;
         }
+        
         this.getNames = ()=>{
             let retNames = [];
             let cnt = 0;

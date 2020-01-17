@@ -1,8 +1,8 @@
 const crypto = require('crypto');
 
 module.exports = (req, res)=>{
-    let id = req.body.id;
-    let pw = req.body.password;
+    const id = req.body.id;
+    const pw = req.body.password;
     // exception just web.
     if( !id || !pw ) res.render('sign_up', {msg: "정보를 확인해주세요."});
     else{
