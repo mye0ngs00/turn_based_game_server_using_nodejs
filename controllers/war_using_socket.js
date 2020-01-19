@@ -1,3 +1,5 @@
+const serverSocket = require('../models/socket');
+
 exports = module.exports = (app) => {
     
     let numOfPlayers = 0;
@@ -10,9 +12,9 @@ exports = module.exports = (app) => {
     app.set('numOfPlayers', numOfPlayers);
     app.set('players', players);
 
-    app.io.on('connection', (socket)=>{
+    serverSocket.on('connection', (clientSocket)=>{
         // 유저가 입장했을 때
-        socket.on('join', (data)=>{
+        clientSocket.on('join', (data)=>{
             // 동시접속 방지
             numOfPlayers++;
             if( players[0] == null ) players[0] = data.name;
@@ -22,65 +24,65 @@ exports = module.exports = (app) => {
             app.set('numOfPlayers', numOfPlayers);
             
             console.log("동시접속자: %d 명", numOfPlayers); 
-            socket.name = data.name;
-            socket.ip = data.ip;
+            clientSocket.name = data.name;
+            clientSocket.ip = data.ip;
       
-            console.log("["+socket.ip+"]"+ socket.name +" join.");
-            socket.broadcast.emit('notice', "야생의 " + socket.name + "가 나타났다.");
+            console.log("["+clientSocket.ip+"]"+ clientSocket.name +" join.");
+            clientSocket.broadcast.emit('notice', "야생의 " + clientSocket.name + "가 나타났다.");
             // join 이전 데이터
             // 재접속 구현x
             datasBeforeJoin.forEach((actionData)=>{
-                socket.emit('setup', actionData);
+                clientSocket.emit('setup', actionData);
             });
         });
-        socket.on('setup', (data)=>{
+        clientSocket.on('setup', (data)=>{
             datasBeforeJoin.push(data);
-            app.io.sockets.emit('setup', data);
+            serverSocket.sockets.emit('setup', data);
         });
-        socket.on('end', ()=>{
+        clientSocket.on('end', ()=>{
             isPlaying = false;
             player0_ready = false;
             player1_ready = false;
-            app.io.sockets.emit('end');
+            serverSocket.sockets.emit('end');
         });
         // action
-        socket.on('action', (data)=>{
+        clientSocket.on('action', (data)=>{
             // traffic 많으면 local처리.
-            app.io.sockets.emit('situation', data);
+            serverSocket.sockets.emit('situation', data);
         });
         // isReady to game?
-        socket.on('turn0', (bool)=>{
+        clientSocket.on('turn0', (bool)=>{
             console.log( "turn0: " + bool);
             player0_ready = bool;
             if( player0_ready && player1_ready && !isPlaying ){
                 console.log('turn0  ready');
                 isPlaying = true;
-                app.io.sockets.emit('ready');
-                socket.emit('turnUp');
+                serverSocket.sockets.emit('ready');
+                clientSocket.emit('turnUp');
             }
         });
-        socket.on('turn1', (bool)=>{
+        clientSocket.on('turn1', (bool)=>{
             console.log( "turn1: " + bool);
             player1_ready = bool;
             if( player0_ready && player1_ready && !isPlaying ){
                 console.log('turn1  ready');
                 isPlaying = true;
-                app.io.sockets.emit('ready');
-                socket.broadcast.emit('turnUp');
+                serverSocket.sockets.emit('ready');
+                clientSocket.broadcast.emit('turnUp');
             }
         });
-        socket.on('turnUpToServer', ()=>{
-            socket.broadcast.emit('turnUp');
+        clientSocket.on('turnUpToServer', ()=>{
+            clientSocket.broadcast.emit('turnUp');
         });
         // destroyed
-        socket.on('disconnect', ()=>{
+        clientSocket.on('disconnect', ()=>{
             console.log("A user disconnected");
-            socket.broadcast.emit('notice', socket.name + "가 팬티만 입고 도망갔다.");
-            socket.broadcast.emit('situation', {});
+            clientSocket.broadcast.emit('notice', clientSocket.name + "가 팬티만 입고 도망갔다.");
+            clientSocket.broadcast.emit('situation', {});
         
             //나간 경우 배열 초기화
             datasBeforeJoin = [];
-            let index = players.indexOf(socket.name);
+            let index = players.indexOf(clientSocket.name);
             if( index !== -1 ){
                 players[index] = null;
                 numOfPlayers--;
@@ -89,7 +91,7 @@ exports = module.exports = (app) => {
             app.set('players', players);
             
             console.log("동시접속자: %d 명", numOfPlayers); 
-            socket.broadcast.emit('re');
+            clientSocket.broadcast.emit('re');
         });
     });
 }

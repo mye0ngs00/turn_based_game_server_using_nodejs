@@ -1,27 +1,30 @@
+const serverSocket = require('../models/socket');
 const gameQueue = new (require('../models/queue'));
 
-exports = module.exports = (app) => {
-    app.io.on('connection', (socket)=>{
+exports = module.exports = () => {
+    serverSocket.on('connection', (clientSocket)=>{
+        // 나중에 채널도 추가.
+        clientSocket.roomNo = 0;
         gameQueue.getNames().then( names => {
-            socket.emit('addUser', names);
+            clientSocket.emit('addUser', names);
         });
 
-        socket.on('enqueue', username=>{
-            socket.username = username;
-            gameQueue.enqueue( socket );
-            socket.broadcast.emit('addUser', [ username ] );
+        clientSocket.on('enqueue', username=>{
+            clientSocket.username = username;
+            gameQueue.enqueue( clientSocket );
+            clientSocket.broadcast.emit('addUser', [ username ] );
         });
 
-        socket.on('exit', username=>{
+        clientSocket.on('exit', username=>{
             gameQueue.exit( username );
-            socket.broadcast.emit('removeUser', [ username ] );
-            socket.disconnect();
+            clientSocket.broadcast.emit('removeUser', [ username ] );
+            clientSocket.disconnect();
         });
 
-        socket.on('disconnect', ()=>{
-            gameQueue.exit( socket.username );
-            socket.broadcast.emit('removeUser', [ socket.username ] );
-            socket.disconnect();
+        clientSocket.on('disconnect', ()=>{
+            gameQueue.exit( clientSocket.username );
+            clientSocket.broadcast.emit('removeUser', [ clientSocket.username ] );
+            clientSocket.disconnect();
         });
 
     });

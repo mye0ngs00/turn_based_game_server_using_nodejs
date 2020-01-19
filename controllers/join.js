@@ -1,16 +1,24 @@
 /**
  * 참조하는 모듈: queue_manager.js
  */
+const serverSocket = require('../models/socket.js');
+let roomNo = 1;
 
 exports = module.exports = (user1_socket, user2_socket)=>{
-    let channel;
-    (channel_pick = ()=>{
-        channel = "test";
-    })();
+    if( !serverSocket.nsps['/'].adapter.rooms["room-" + roomNo] ){
+        user1_socket.roomNo = roomNo;
+        // user1_socket.turn = 1;
+        user2_socket.roomNo = roomNo;
+        user1_socket.join("room-"+roomNo);
+        user2_socket.join("room-"+roomNo);
+        
+        // game start
+        console.log(`room-${roomNo}`);
+        serverSocket.sockets.to(`room-${roomNo}`).emit('onReady');
 
-    user1_socket.channel = channel;
-    user2_socket.channel = channel;
-    user1_socket.join(channel);
-    user2_socket.join(channel);
-    console.log("join success.");
+        roomNo++;
+        if( roomNo > 100 ) roomNo = 1;
+        console.log("join success.");
+        //소켓 끊기.
+    }
 }

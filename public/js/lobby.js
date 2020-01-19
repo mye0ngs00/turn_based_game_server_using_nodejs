@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
     $ip = document.getElementById('ip').value;
 	$username = document.getElementById('name').value;
 	$character = document.getElementById('character').value;
-	$turn = document.getElementById('turn').value;
+	/*<!-- $turn = document.getElementById('turn').value; -->*/
 
     document.getElementById('finder').addEventListener('click', (event)=>{
         let T = event.target;
@@ -35,6 +35,11 @@ window.addEventListener('DOMContentLoaded', ()=>{
                     removeUser( name );
                 });
             });
+
+            socket.on('onReady', ()=>{
+                console.log('readyt');
+                window.location.href="/room";
+            })
         }
         else if( T.classList.value === "exit" ){
             T.classList.remove('exit');

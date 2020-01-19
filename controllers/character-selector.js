@@ -1,22 +1,17 @@
-let numOfPlayers = 0;
-let players = [];
-
 module.exports = (req, res)=>{
-  // play game when number of the players less than 2
-  // req.app.get = app.get of parent router. (app.js)
-  numOfPlayers = req.app.get('numOfPlayers');
-  players = req.app.get('players');
-  // 빈칸 찾기.
-  if( players[0] == null ) emptyIdx = 0;
-  else emptyIdx = 1;
+  if( req.session.username && req.body.name){
+    req.session.user = {};
+    req.session.user.alias = req.body.name;
+    req.session.user.character = req.body.character;
 
-  if( numOfPlayers < 2 ){
-    res.render('lobby',{
-      ip: res.locals.ip,
-      name: req.body.name,
-      character: req.body.character,
-      turn: emptyIdx,
+    req.session.save((err)=>{
+      res.render('lobby',{
+        ip: res.locals.ip,
+        name: req.session.user.alias,
+        character: req.session.user.character,
+      });
     });
+  }else{
+    res.redirect('/');
   }
-  else res.send("방이 꽉찼습니다.");
 }

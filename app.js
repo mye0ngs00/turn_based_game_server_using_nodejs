@@ -19,13 +19,11 @@ const signRouter = require('./routes/sign');
 
 const app = express();
 
-// rdb connection.
-app.conn = mysql.createConnection(dbOptions);
-
-// webSocket connection.
-app.io = require('socket.io')();
 require('./controllers/war_using_socket')(app);
 require('./controllers/queue_manager')(app);
+
+// rdb connection.
+app.conn = mysql.createConnection(dbOptions);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -53,12 +51,12 @@ app.use('/room', roomRouter);
 app.use('/sign', signRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use( (req, res, next) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use( (err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
