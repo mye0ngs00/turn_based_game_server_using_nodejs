@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 	$turn = document.getElementById('turn').value;
 	document.getElementById("myTurn").innerHTML = $turn==0?"선공":"후공";
 
-	action = io();
+	action = io('/battle');
 	action.on('end', function(){
 		action.emit('turn'+$turn, false);
 		document.getElementById("myTurn").innerHTML = $turn===0?"선공":"후공";

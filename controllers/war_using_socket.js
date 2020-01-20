@@ -1,4 +1,4 @@
-const serverSocket = require('../models/socket');
+const battleSocket = require('../models/battle-socket');
 
 exports = module.exports = (app) => {
     
@@ -12,7 +12,7 @@ exports = module.exports = (app) => {
     app.set('numOfPlayers', numOfPlayers);
     app.set('players', players);
 
-    serverSocket.on('connection', (clientSocket)=>{
+    battleSocket.on('connection', (clientSocket)=>{
         // 유저가 입장했을 때
         clientSocket.on('join', (data)=>{
             // 동시접속 방지
@@ -37,18 +37,18 @@ exports = module.exports = (app) => {
         });
         clientSocket.on('setup', (data)=>{
             datasBeforeJoin.push(data);
-            serverSocket.sockets.emit('setup', data);
+            battleSocket.emit('setup', data);
         });
         clientSocket.on('end', ()=>{
             isPlaying = false;
             player0_ready = false;
             player1_ready = false;
-            serverSocket.sockets.emit('end');
+            battleSocket.emit('end');
         });
         // action
         clientSocket.on('action', (data)=>{
             // traffic 많으면 local처리.
-            serverSocket.sockets.emit('situation', data);
+            battleSocket.emit('situation', data);
         });
         // isReady to game?
         clientSocket.on('turn0', (bool)=>{
@@ -57,7 +57,7 @@ exports = module.exports = (app) => {
             if( player0_ready && player1_ready && !isPlaying ){
                 console.log('turn0  ready');
                 isPlaying = true;
-                serverSocket.sockets.emit('ready');
+                battleSocket.emit('ready');
                 clientSocket.emit('turnUp');
             }
         });
@@ -67,7 +67,7 @@ exports = module.exports = (app) => {
             if( player0_ready && player1_ready && !isPlaying ){
                 console.log('turn1  ready');
                 isPlaying = true;
-                serverSocket.sockets.emit('ready');
+                battleSocket.emit('ready');
                 clientSocket.broadcast.emit('turnUp');
             }
         });
