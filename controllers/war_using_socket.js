@@ -26,7 +26,7 @@ exports = module.exports = (app) => {
             console.log("동시접속자: %d 명", numOfPlayers); 
             clientSocket.name = data.name;
             clientSocket.ip = data.ip;
-      
+       
             console.log("["+clientSocket.ip+"]"+ clientSocket.name +" join.");
             clientSocket.broadcast.emit('notice', "야생의 " + clientSocket.name + "가 나타났다.");
             // join 이전 데이터

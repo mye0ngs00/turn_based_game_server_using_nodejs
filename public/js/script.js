@@ -1,5 +1,5 @@
 var $ip;
-var $name;
+var $alias;
 var $character;
 var $turn;
 var action;
@@ -17,7 +17,7 @@ var enemyCol;
 var enemyDamage;
 var enemyHP = 5;
 var enemyMP = 5;
-var enemyName;
+var enemyAlias;
 
 var shield = 0;
 var enemyShield = 0;
@@ -32,7 +32,7 @@ const MAX_COL = 3;
 // 요소를 가져온 것들은 전부 $로 parameter 선언.
 window.addEventListener('DOMContentLoaded', (event)=>{
 	$ip = document.getElementById('ip').value;
-	$username = document.getElementById('name').value;
+	$alias = document.getElementById('name').value;
 	$character = document.getElementById('character').value;
 	$turn = document.getElementById('turn').value;
 	document.getElementById("myTurn").innerHTML = $turn==0?"선공":"후공";
@@ -54,7 +54,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 	action.on('connect', function(socket){
 		console.log('connect');
 		action.emit('join',{
-			name: $username,
+			name: $alias,
 			ip: $ip,
 		});
 	});
@@ -88,12 +88,12 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 	action.on('setup', function(socket){
 		if( !socket ) return;
 		else{
-			if( socket.name != name){
+			if( socket.name != $alias){
 				enemyHP = socket.HP;
 				enemyMP = socket.MP;
 				enemyRow = socket.row;
 				enemyCol = socket.col;
-				enemyName = socket.name;
+				enemyAlias = socket.name;
 			}
 			else{
 				HP = socket.HP;
@@ -104,17 +104,17 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 		}
 		clearField();
 		// me
-		document.getElementById(''+row + col).innerHTML = document.getElementById('' + row + col).innerHTML + name + " ";
-		if( enemyName != null ){
+		document.getElementById(''+row + col).innerHTML = document.getElementById('' + row + col).innerHTML + $alias + " ";
+		if( enemyAlias != null ){
 			// enemy
-			document.getElementById(''+enemyRow + enemyCol).innerHTML = document.getElementById('' + enemyRow + enemyCol).innerHTML + enemyName + " ";
+			document.getElementById(''+enemyRow + enemyCol).innerHTML = document.getElementById('' + enemyRow + enemyCol).innerHTML + enemyAlias + " ";
 		}
 	})
 	action.on('situation', function(socket){
 		document.getElementById('currentCard').innerHTML = socket.card;
 		if( !socket ) return;
 		else{	
-			if( socket.name != name ){
+			if( socket.name != $alias ){
 				if( socket.damage && socket.range ){
 					if( socket.range[row+2-enemyRow][col+3-enemyCol] ){
 						if( socket.damage - shield > 0 ){
@@ -205,10 +205,10 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 
 			clearField();
 			// me
-			document.getElementById(''+row + col).innerHTML = document.getElementById('' + row + col).innerHTML + name + " ";
-			if( enemyName != null ){
+			document.getElementById(''+row + col).innerHTML = document.getElementById('' + row + col).innerHTML + $alias + " ";
+			if( enemyAlias != null ){
 				// enemy
-				document.getElementById(''+enemyRow + enemyCol).innerHTML = document.getElementById('' + enemyRow + enemyCol).innerHTML + enemyName + " ";
+				document.getElementById(''+enemyRow + enemyCol).innerHTML = document.getElementById('' + enemyRow + enemyCol).innerHTML + enemyAlias + " ";
 			}
 		}
 	});
@@ -259,7 +259,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 			HP,
 			MP,
 			damage,
-			name,
+			name : $alias,
 			move,
 			range,
 		});
@@ -322,7 +322,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					HP: undefined,
 					MP: undefined,
 					damage: undefined,
-					name,
+					name : $alias,
 					move: {
 						row: -1,
 						col: 0,
@@ -338,7 +338,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					HP: undefined,
 					MP: undefined,
 					damage: undefined,
-					name,
+					name : $alias,
 					move: {
 						row: 0,
 						col: -1,
@@ -354,7 +354,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					HP: undefined,
 					MP: undefined,
 					damage: undefined,
-					name,
+					name : $alias,
 					move: {
 						row: 0,
 						col: 1,
@@ -370,7 +370,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					HP: undefined,
 					MP: undefined,
 					damage: undefined,
-					name,
+					name : $alias,
 					move: {
 						row: 1,
 						col: 0,
@@ -386,7 +386,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					HP: undefined,
 					MP: -2,
 					damage: undefined,
-					name,
+					name : $alias,
 					move: {
 						row: 0,
 						col: -4,
@@ -402,7 +402,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					HP: undefined,
 					MP: -2,
 					damage: undefined,
-					name,
+					name : $alias,
 					move: {
 						row: 0,
 						col: 4,
@@ -418,7 +418,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					HP: undefined,
 					MP: 2,
 					damage: undefined,
-					name,
+					name : $alias,
 					move: undefined,
 					range: undefined,
 					card: "마나충전",
@@ -431,7 +431,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					HP: undefined,
 					MP: undefined,
 					damage: 1,
-					name,
+					name : $alias,
 					move: undefined,
 					range: [[0, 0, 0, 0, 0, 0, 0],
 							[0, 0, 0, 0, 0, 0, 0],
@@ -445,7 +445,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 				sendAction={
 					row,
 					col,
-					name,
+					name : $alias,
 					MP: -1,
 					shield: 3,
 					card: "수호자의 방패",
@@ -457,7 +457,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					col,
 					MP: -3,
 					damage: 4,
-					name,
+					name : $alias,
 					range: [[0, 0, 0, 0, 0, 0, 0],
 							[0, 0, 0, 0, 0, 0, 0],
 							[0, 0, 1, 1, 1, 0, 0],
@@ -472,7 +472,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					col,
 					MP: -2,
 					damage: 2,
-					name,
+					name : $alias,
 					range: [[0, 0, 0, 0, 0, 0, 0],
 							[0, 0, 0, 0, 0, 0, 0],
 							[0, 0, 1, 0, 1, 0, 0],
@@ -487,7 +487,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					col,
 					MP: -2,
 					damage: 2,
-					name,
+					name : $alias,
 					range: [[0, 0, 0, 0, 0, 0, 0],
 							[0, 0, 0, 1, 0, 0, 0],
 							[0, 0, 1, 1, 1, 0, 0],
@@ -511,7 +511,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 						row: 0,
 						col: direction,
 					},
-					name,
+					name : $alias,
 					range: [[0, 0, 0, 0, 0, 0, 0],
 							[0, 0, 0, 0, 0, 0, 0],
 							[0, 1, 1, 1, 1, 1, 0],
@@ -526,7 +526,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					col,
 					HP: -1,
 					MP: 3,
-					name,
+					name : $alias,
 					card: "마법사의 계약",
 				};
 				break;
@@ -536,7 +536,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					col,
 					MP: -1,
 					damage: 2,
-					name,
+					name : $alias,
 					range: [[0, 0, 0, 0, 0, 0, 0],
 							[0, 0, 0, 1, 0, 0, 0],
 							[0, 0, 0, 1, 0, 0, 0],
@@ -551,7 +551,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					col,
 					MP: -3,
 					damage: 2,
-					name,
+					name : $alias,
 					range: [[0, 0, 0, 0, 0, 0, 0],
 							[0, 0, 0, 0, 0, 0, 0],
 							[1, 1, 1, 0, 1, 1, 1],
@@ -566,7 +566,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					col,
 					MP: -4,
 					damage: 2,
-					name,
+					name : $alias,
 					absoluteRange: [[1, 0, 1, 0],
 									[0, 1, 0, 1],
 									[1, 0, 1, 0]],
@@ -579,7 +579,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 					col,
 					MP: -4,
 					damage: 2,
-					name,
+					name : $alias,
 					absoluteRange: [[0, 1, 0, 1],
 									[1, 0, 1, 0],
 									[0, 1, 0, 1]],
