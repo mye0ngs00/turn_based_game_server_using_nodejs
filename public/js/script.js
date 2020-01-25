@@ -46,7 +46,7 @@ window.addEventListener('DOMContentLoaded', (event)=>{
 		myTurnFixed = false;
 		isPlaying = false;
 		// 게임 종료
-		if( !enemyHP || !HP ){
+		if( enemyHP < 1 || HP < 1 ){
 			if( enemyHP < 1 ) alert(" You win.");
 			else alert("You lose.");
 		}

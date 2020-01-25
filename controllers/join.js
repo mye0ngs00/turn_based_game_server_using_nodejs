@@ -6,9 +6,11 @@ let roomNo = 1;
 
 exports = module.exports = (user1_socket, user2_socket)=>{
     if( !queueSocket.adapter.rooms["room-" + roomNo] ){
+        console.dir( user1_socket );
         user1_socket.roomNo = roomNo;
         // user1_socket.turn = 1;
         user2_socket.roomNo = roomNo;
+        
         user1_socket.join("room-"+roomNo);
         user2_socket.join("room-"+roomNo);
         
