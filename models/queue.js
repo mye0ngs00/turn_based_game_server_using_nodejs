@@ -8,7 +8,6 @@ exports = module.exports = class Queue{
 
             // matching
             if( this._queue.length > 1 ){
-                console.log('test');
                 join( this._queue.pop(), this._queue.pop() );
             }
         }

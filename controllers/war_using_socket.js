@@ -12,6 +12,7 @@ exports = module.exports = (app) => {
     app.set('numOfPlayers', numOfPlayers);
     app.set('players', players);
 
+    // nsps: /battle
     battleSocket.on('connection', (clientSocket)=>{
         // 유저가 입장했을 때
         clientSocket.on('join', (data)=>{
@@ -55,7 +56,7 @@ exports = module.exports = (app) => {
             console.log( "turn0: " + bool);
             player0_ready = bool;
             if( player0_ready && player1_ready && !isPlaying ){
-                console.log('turn0  ready');
+                console.log('turn0 ready');
                 isPlaying = true;
                 battleSocket.emit('ready');
                 clientSocket.emit('turnUp');
@@ -65,7 +66,7 @@ exports = module.exports = (app) => {
             console.log( "turn1: " + bool);
             player1_ready = bool;
             if( player0_ready && player1_ready && !isPlaying ){
-                console.log('turn1  ready');
+                console.log('turn1 ready');
                 isPlaying = true;
                 battleSocket.emit('ready');
                 clientSocket.broadcast.emit('turnUp');

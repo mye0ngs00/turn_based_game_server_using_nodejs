@@ -1,8 +1,8 @@
-const serverSocket = require('../models/socket');
+const queueSocket = require('../models/queue-socket');
 const gameQueue = new (require('../models/queue'));
 
 exports = module.exports = () => {
-    serverSocket.on('connection', (clientSocket)=>{
+    queueSocket.on('connection', (clientSocket)=>{
         // 나중에 채널도 추가.
         clientSocket.roomNo = 0;
         gameQueue.getNames().then( names => {

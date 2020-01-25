@@ -16,7 +16,10 @@ window.addEventListener('DOMContentLoaded', ()=>{
             console.log('enqueue'); //debug.
             document.getElementById('users').style.visibility = "visible";
 
-            socket = io();
+            /*
+                나중에 채널 별 서버식 구성으로 부하 클러스터링.
+            */
+            socket = io('/queue');
             // append user.
             socket.emit('enqueue', $username ); //나중에는 여기에 MMR 추가해서 emit.
             // params,, socket.username 으로 변경예정.
@@ -37,7 +40,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
             });
 
             socket.on('onReady', ()=>{
-                console.log('readyt');
+                console.log('ready');
                 window.location.href="/room";
             })
         }

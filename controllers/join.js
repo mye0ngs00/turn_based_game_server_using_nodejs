@@ -1,11 +1,11 @@
 /**
  * 참조하는 모듈: queue_manager.js
  */
-const serverSocket = require('../models/socket.js');
+const queueSocket = require('../models/queue-socket.js');
 let roomNo = 1;
 
 exports = module.exports = (user1_socket, user2_socket)=>{
-    if( !serverSocket.nsps['/'].adapter.rooms["room-" + roomNo] ){
+    if( !queueSocket.adapter.rooms["room-" + roomNo] ){
         user1_socket.roomNo = roomNo;
         // user1_socket.turn = 1;
         user2_socket.roomNo = roomNo;
@@ -14,7 +14,7 @@ exports = module.exports = (user1_socket, user2_socket)=>{
         
         // game start
         console.log(`room-${roomNo}`);
-        serverSocket.sockets.to(`room-${roomNo}`).emit('onReady');
+        queueSocket.to(`room-${roomNo}`).emit('onReady');
 
         roomNo++;
         if( roomNo > 100 ) roomNo = 1;
